@@ -1,6 +1,7 @@
-import { ApolloServer, gql } from "apollo-server-express"
-
-const typeDefs = gql`
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const apollo_server_express_1 = require("apollo-server-express");
+const typeDefs = apollo_server_express_1.gql `
       type User {
         id: Int!
         username: String!
@@ -23,6 +24,6 @@ const typeDefs = gql`
       type Subscription {
         messageSent: Chat
         usersOnline: [User]
-      }`
-
-export default typeDefs
+      }`;
+exports.default = typeDefs;
+//# sourceMappingURL=schema.js.map

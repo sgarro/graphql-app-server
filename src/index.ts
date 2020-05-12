@@ -1,6 +1,6 @@
-import { GraphQLServer, PubSub } from "graphql-yoga"
-import resolvers from "./resolver/resolver"
-import typeDefs from "./schemas/schema"
+import { ApolloServer, PubSub } from "apollo-server-express"
+import express from "express"
+import http from "http"
 const pubsub = new PubSub()
 const subscriptions = {
     onConnect: (connectionParams, webSocket, context) => {
@@ -10,11 +10,36 @@ const subscriptions = {
       }
       },
       onDisconnect: (webSocket, context) => {
-        console.log("onDisconnect", context.currentUser)
-
-        // ...
+        context.initPromise.then(async ({currentUser}) => {
+          resolvers.Mutation.logoutUserOnline(null, {username: currentUser}, {pubsub})
+          console.log("user Leaving", currentUser)
+        })
       },
 }
-const server = new GraphQLServer({ typeDefs, resolvers, context: { pubsub },  })
-console.log(server.context)
-server.start({subscriptions}, () => console.log("Server is running on localhost:4000"))
+import resolvers from "./resolvers/resolver"
+import typeDefs from "./schemas/schema"
+
+const server = new ApolloServer({
+  context: async ({connection}) => {
+    console.log("context")
+    return {
+      ...connection.context,
+      pubsub,
+    }
+  },
+  resolvers,
+  subscriptions,
+  typeDefs,
+  })
+
+const app = express()
+server.applyMiddleware({ app })
+const httpServer = http.createServer(app)
+server.installSubscriptionHandlers(httpServer)
+const PORT = 4000
+
+// ⚠️ Pay attention to the fact that we are calling `listen` on the http server variable, and not on `app`.
+httpServer.listen(PORT, () => {
+  console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`)
+  console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`)
+})
