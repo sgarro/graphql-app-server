@@ -35,7 +35,6 @@ const resolver_1 = __importDefault(require("./resolvers/resolver"));
 const schema_1 = __importDefault(require("./schemas/schema"));
 const server = new apollo_server_express_1.ApolloServer({
     context: ({ connection }) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("context");
         return Object.assign(Object.assign({}, connection.context), { pubsub });
     }),
     resolvers: resolver_1.default,

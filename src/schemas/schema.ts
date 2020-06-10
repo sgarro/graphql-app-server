@@ -16,7 +16,7 @@ const typeDefs = gql`
         usersOnline: [User]
       }
       type Mutation {
-        createChat(from: String!, content: String!): Chat
+        createChat(content: String!): Chat
         updateUserOnline(username: String!): User
         logoutUserOnline(username: String!): User
       }

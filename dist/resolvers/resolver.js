@@ -14,13 +14,13 @@ const resolvers = {
         }
     },
     Mutation: {
-        createChat(root, { from, content }, { pubsub }) {
-            const userIndex = users.findIndex((userToFind) => userToFind.username === from);
-            const user = users[userIndex];
+        createChat(root, { content }, context) {
+            const userIndex = users.findIndex((userToFind) => userToFind.username === context.currentUser);
+            const user = (userIndex !== -1) ? users[userIndex] : { id: users.length + 1, username: context.currentUser };
+            user.isOnline = true;
             const chat = { id: chats.length + 1, from: user, content };
             chats.push(chat);
-            console.log("CHATCREATED", pubsub);
-            pubsub.publish("CHAT_CHANNEL", { messageSent: chat });
+            context.pubsub.publish("CHAT_CHANNEL", { messageSent: chat });
             return chat;
         },
         updateUserOnline(root, { username }, { pubsub }) {

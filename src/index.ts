@@ -23,7 +23,6 @@ import typeDefs from "./schemas/schema"
 
 const server = new ApolloServer({
   context: async ({connection}) => {
-    console.log("context")
     return {
       ...connection.context,
       pubsub,
