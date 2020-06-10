@@ -27,7 +27,7 @@ const resolvers = {
             console.log("updating user");
             const userIndex = users.findIndex((userToFind) => userToFind.username === username);
             const user = (userIndex !== -1) ? users[userIndex] : { id: users.length + 1, username };
-            user.last = new Date();
+            user.isOnline = true;
             if (userIndex === -1) {
                 users.push(user);
             }
@@ -35,9 +35,10 @@ const resolvers = {
             return user;
         },
         logoutUserOnline(root, { username }, { pubsub }) {
-            const newUsers = users.filter((user) => user.username !== username);
-            console.log("newUsers", newUsers);
-            pubsub.publish("USERS", { usersOnline: newUsers });
+            const userIndex = users.findIndex((userToFind) => userToFind.username === username);
+            const user = (userIndex !== -1) ? users[userIndex] : { id: users.length + 1, username };
+            user.isOnline = false;
+            pubsub.publish("USERS", { usersOnline: users });
             return;
         },
     },

@@ -5,7 +5,7 @@ const typeDefs = apollo_server_express_1.gql `
       type User {
         id: Int!
         username: String!
-        last: String!
+        isOnline: Boolean!
       }
       type Chat {
         id: Int!

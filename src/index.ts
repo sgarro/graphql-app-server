@@ -5,7 +5,9 @@ const pubsub = new PubSub()
 const subscriptions = {
     onConnect: (connectionParams, webSocket, context) => {
       console.log("user", connectionParams.user)
+      resolvers.Mutation.updateUserOnline(null, {username: connectionParams.user}, {pubsub})
       return  {
+
           currentUser: connectionParams.user,
       }
       },

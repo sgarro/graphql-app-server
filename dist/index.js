@@ -19,6 +19,7 @@ const pubsub = new apollo_server_express_1.PubSub();
 const subscriptions = {
     onConnect: (connectionParams, webSocket, context) => {
         console.log("user", connectionParams.user);
+        resolver_1.default.Mutation.updateUserOnline(null, { username: connectionParams.user }, { pubsub });
         return {
             currentUser: connectionParams.user,
         };

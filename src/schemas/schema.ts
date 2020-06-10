@@ -4,7 +4,7 @@ const typeDefs = gql`
       type User {
         id: Int!
         username: String!
-        last: String!
+        isOnline: Boolean!
       }
       type Chat {
         id: Int!
